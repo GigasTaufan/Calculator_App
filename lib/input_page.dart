@@ -9,6 +9,9 @@ class InputPage extends StatefulWidget {
 }
 
 class _InputPageState extends State<InputPage> {
+  var question = '';
+  var answer = '';
+
   List<String> buttons = [
     'AC',
     'DEL',
@@ -37,11 +40,43 @@ class _InputPageState extends State<InputPage> {
       backgroundColor: Colors.deepOrange[100],
       body: Column(
         children: [
-          // Display
+          // Display Question and Answer
           Expanded(
-            child: Container(),
+            child: Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(
+                    height: 50.0,
+                  ),
+                  // Question
+                  Container(
+                    padding: EdgeInsets.all(20.0),
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      question,
+                      style: TextStyle(
+                        fontSize: 20.0,
+                      ),
+                    ),
+                  ),
+
+                  // Answer
+                  Container(
+                    padding: EdgeInsets.all(20.0),
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      answer,
+                      style: TextStyle(
+                        fontSize: 35.0,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-          // Button
+          // Button For Calculator
           Expanded(
             flex: 2,
             child: Container(
@@ -50,19 +85,45 @@ class _InputPageState extends State<InputPage> {
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 4),
                   itemBuilder: (BuildContext context, int index) {
+                    // Clear Button AC
                     if (index == 0) {
                       return CalculatorButton(
+                          onPressed: () {
+                            setState(() {
+                              question = '';
+                              answer = '';
+                            });
+                          },
                           buttonText: buttons[index],
                           textColor: Colors.white,
                           color: Colors.green);
-                    } else if (index == 1) {
+                    }
+                    // Delete Button DEL
+                    else if (index == 1) {
                       return CalculatorButton(
+                        onPressed: () {
+                          setState(() {
+                            if (question.length > 0) {
+                              question =
+                                  question.substring(0, question.length - 1);
+                            } else {
+                              question = '';
+                            }
+                          });
+                        },
                         buttonText: buttons[index],
                         textColor: Colors.white,
                         color: Colors.red,
                       );
-                    } else {
+                    }
+                    // Operator and Number
+                    else {
                       return CalculatorButton(
+                        onPressed: () {
+                          setState(() {
+                            question += buttons[index];
+                          });
+                        },
                         buttonText: buttons[index],
                         textColor: isOperator(buttons[index])
                             ? Colors.white
